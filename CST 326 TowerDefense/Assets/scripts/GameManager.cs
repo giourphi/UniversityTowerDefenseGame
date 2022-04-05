@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    private float coinCounter =0f;
+   // private float coinCounter =0f;
     //public float hpstat = 10f;
     [Header("Score UI")] 
     public GameObject coinText;
@@ -20,12 +20,5 @@ public class GameManager : MonoBehaviour
         instance = this;
     }
 
-    public void CoinUpdate()
-   {
-       
-       coinCounter+= 1f;
-       coinText.GetComponent<TextMeshProUGUI>().text = coinCounter.ToString();
-       CharacterMovement.instance.resetHp();
-
-   }
+ 
 }

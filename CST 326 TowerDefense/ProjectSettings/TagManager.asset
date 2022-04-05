@@ -7,6 +7,7 @@ TagManager:
   - Waypoints
   - gamemanager
   - enemies
+  - Enemy
   layers:
   - Default
   - TransparentFX

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WaveSpawner : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class WaveSpawner : MonoBehaviour
     public float timeBetweenWaves = 10f;
     private float countDown = 2f;
     private int waveNumber = 0;
-    
+    public Text waveCountDownText;
 
     void Update()
     {
@@ -21,6 +22,8 @@ public class WaveSpawner : MonoBehaviour
         }
 
         countDown -= Time.deltaTime;
+        countDown = Mathf.Clamp(countDown, 0f, Mathf.Infinity);
+        waveCountDownText.text = string.Format("{0:00.00}",countDown);
     }
 
     IEnumerator spawnWave()

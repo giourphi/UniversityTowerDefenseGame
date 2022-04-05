@@ -11,86 +11,75 @@ public class CharacterMovement : MonoBehaviour
     public static CharacterMovement instance;
     public float speed;
     private Waypoints Wpoints;
-    private int waypointIndex;
+    private int waypointIndex =0;
     private float hpstat = 10f;
-    public float rayLength;
-    public LayerMask layermask;
     public GameObject gamemanager;
     public GameObject enemy;
+    [Header("unity stuff")] 
+    public Image healthbar;
+    private Transform target;
+    public float startHealth = 20;
+    private float health;
+    //public float val = 2f;
     // public GameObject enemies;
    
     // Start is called before the first frame update
 
     public void Awake()
     {
-        instance = this;
+      // instance = this;
     }
 
     void Start()
     {
-        Wpoints = GameObject.FindGameObjectWithTag("Waypoints").GetComponent<Waypoints>();
-        //Instantiate(gameObject);
-        gamemanager =  GameObject.FindGameObjectWithTag("gamemanager");
-       enemy = GameObject.FindGameObjectWithTag("enemies");
+        
+       enemy = GameObject.FindGameObjectWithTag("Enemy");
+       health = startHealth;
+
+       target = Waypoints.waypoints[0];
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position = Vector2.MoveTowards(transform.position, Wpoints.waypoints[waypointIndex].position,
-            speed * Time.deltaTime);
 
-        Vector3 dir = Wpoints.waypoints[waypointIndex].position - transform.position;
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.AngleAxis(angle,Vector3.forward);
-            
-        if (Vector2.Distance(transform.position, Wpoints.waypoints[waypointIndex].position) < 0.1f)
+        Vector3 dir = target.position - transform.position;
+        transform.Translate(dir.normalized*speed*Time.deltaTime,Space.World);
+
+        if (Vector3.Distance(transform.position, target.position) <= 0.2f)
         {
-         
-            if (waypointIndex >= Wpoints.waypoints.Length - 1)
-            {
-                Destroy(gameObject);
-                return;
-            }else
-            {
-                waypointIndex++;
-            }
-        }
-        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            
-            if (Physics.Raycast(ray, out hit, rayLength, layermask))
-            {
-                Debug.Log("raycasthit" );
-                hpstat -=2;
-            }
+            GetNextWavepoint();
         }
 
-    
+     
+    }
 
-       
+
+    public void TakeDamage( int amount)
+    {
+        health -= amount;
         
+        healthbar.fillAmount = health/startHealth;
 
-    }
-
-    public void FixedUpdate()
-    {
-        if (hpstat == 0)
+        if (health <= 0)
         {
-            Debug.Log("updating coinvalue");
-            Destroy(this.enemy);
-            GameManager.instance.CoinUpdate();
+            PlayerStats.Money += 5;
+            Destroy(enemy);
+            
         }
-    }
 
-    public void resetHp()
-    {
-        hpstat = 10f;
-        Debug.Log("reset hp");
+
     }
-    
+    void GetNextWavepoint()
+    {
+        if (waypointIndex >= Waypoints.waypoints.Length - 1)
+        {
+           Destroy(gameObject);
+           return;
+        }
+        waypointIndex++;
+        target = Waypoints.waypoints[waypointIndex];
+    }
     
 
 
