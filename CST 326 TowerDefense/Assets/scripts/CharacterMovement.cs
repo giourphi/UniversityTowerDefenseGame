@@ -74,13 +74,20 @@ public class CharacterMovement : MonoBehaviour
     {
         if (waypointIndex >= Waypoints.waypoints.Length - 1)
         {
-           Destroy(gameObject);
+           EndPath();
            return;
         }
         waypointIndex++;
         target = Waypoints.waypoints[waypointIndex];
     }
-    
 
+
+    void EndPath()
+    {
+        PlayerStats.Lives--;
+        Destroy(gameObject);
+        
+
+    }
 
 }

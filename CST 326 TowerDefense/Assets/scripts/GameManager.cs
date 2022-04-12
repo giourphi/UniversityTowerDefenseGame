@@ -8,17 +8,31 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance;
-   // private float coinCounter =0f;
-    //public float hpstat = 10f;
-    [Header("Score UI")] 
-    public GameObject coinText;
-    TextMeshPro text;
 
-    public void Awake()
+    private bool gameEnded = false;
+    public GameObject gameOverUI;
+    void Update()
     {
-        instance = this;
+        if (gameEnded)
+            return;
+
+        if (Input.GetKeyDown("e"))
+        {
+            EndGame();
+        }
+        
+            if (PlayerStats.Lives <= 0)
+        {
+            EndGame();
+        }
+        
+        
     }
 
- 
+    void EndGame()
+    {
+        gameEnded = true;
+        gameOverUI.SetActive(true);
+
+    }
 }
